@@ -13,8 +13,8 @@ pipemail.py sender@example.com password recipient@example.com subject
 '''
 
 if argv[1] == '/?':
-	print usage
-	exit()
+    print usage
+    exit()
 
 auth = (argv[1],argv[2])
 

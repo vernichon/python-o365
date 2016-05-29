@@ -15,9 +15,9 @@ e.g.: python simple-message.py that_file_you_want_but_could_only_ssh_in.jpg
 '''
 
 if len(argv) > 1:
-	if argv[1] == '/?':
-		print usage
-		exit()
+    if argv[1] == '/?':
+        print usage
+        exit()
 
 #get login credentials that will be needed to send the message.
 uname = raw_input('Enter your user name: ')
@@ -35,8 +35,8 @@ line = 'please ignore.'
 body = ''
 print 'Now enter the body of the message. leave a blank line when you are done.'
 while line != '':
-	line = raw_input()
-	body += line
+    line = raw_input()
+    body += line
 
 #Give the authentication to the message as instantiate it. then set it's values.
 m = Message(auth=auth)
@@ -45,9 +45,9 @@ m.setSubject(subject)
 m.setBody(body)
 
 if len(argv) > 1:
-	for arg in argv[1:]:
-		a = Attachment(path=arg)
-		m.attachments.append(a)
+    for arg in argv[1:]:
+        a = Attachment(path=arg)
+        m.attachments.append(a)
 
 #send the message and report back.
 print 'Sending message...'

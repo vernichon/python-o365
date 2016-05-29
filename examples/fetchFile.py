@@ -10,29 +10,29 @@ logging.basicConfig(filename='ff.log',level=logging.DEBUG)
 log = logging.getLogger('ff')
 
 def processMessage(m):
-	path = m.json['BodyPreview']
+    path = m.json['BodyPreview']
 
-	path = path[:path.index('\n')]
-	if path[-1] == '\r':
-		path = path[:-1]
+    path = path[:path.index('\n')]
+    if path[-1] == '\r':
+        path = path[:-1]
 
-	att = Attachment(path=path)
+    att = Attachment(path=path)
 
-	resp = Message(auth=auth)
-	resp.setRecipients(m.getSender())
+    resp = Message(auth=auth)
+    resp.setRecipients(m.getSender())
 
-	resp.setSubject('Your file sir!')
-	resp.setBody(path)
-	resp.attachments.append(att)
-	resp.sendMessage()
+    resp.setSubject('Your file sir!')
+    resp.setBody(path)
+    resp.attachments.append(att)
+    resp.sendMessage()
 
-	return True
+    return True
 
 
 print "checking for emails"
 with open('./ff.pw','r') as configFile:
-	config = configFile.read()
-	cjson = json.loads(config)
+    config = configFile.read()
+    cjson = json.loads(config)
 
 e = cjson ['email']
 p = cjson ['password']
@@ -47,6 +47,6 @@ i.getMessages()
 
 log.debug("messages: {0}".format(len(i.messages)))
 for m in i.messages:
-	processMessage(m)
+    processMessage(m)
 
 #To the King!
