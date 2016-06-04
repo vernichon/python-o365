@@ -96,10 +96,9 @@ class Tasks( object ):
         for task in response.json()['value']:
             try:
                 duplicate = False
-
                 #checks to see if the Task is a duplicate. if it is local changes are clobbered.
                 for i,e in enumerate(self.Tasks):
-                    if e.json['Id'] == Task['Id']:
+                    if e.json['Id'] == task['Id']:
                         self.Tasks[i] = Task(task,self.auth)
                         duplicate = True
                         break
