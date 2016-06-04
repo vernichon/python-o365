@@ -25,6 +25,8 @@ from .event import Event
 from .attachment import Attachment
 from .inbox import Inbox
 from .message import Message
+from .task import Task
+from .tasks import Tasks
 from .schedule import Schedule
 
 #To the King!
