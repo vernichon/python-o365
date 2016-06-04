@@ -29,4 +29,4 @@ class Task(object):
         return self.json['Owner']
 
     def getSubject(self):
-        return self.json['Subject']
+        return self.json['Subject'].encode('utf-8')
