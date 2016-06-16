@@ -126,6 +126,11 @@ class Message( object ):
             return False
         return True
 
+    def getDateReceived(self):
+        return self.json['DateTimeReceived']
+
+    def is_read(self):
+        return bool(self.json['IsRead'])
 
     def getSender(self):
         '''get all available information for the sender of the email.'''
