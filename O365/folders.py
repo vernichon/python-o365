@@ -47,7 +47,7 @@ class Folders( object ):
 
         for folder in response.json()['value']:
             duplicate = False
-            log.debug('Got a folder Named: {0}'.format(folder['DisplayName']))
+            log.debug('Got a folder Named: {0}'.format(folder['DisplayName'].encode('utf-8')))
             for existing in self.folders:
                 if existing.json['Id'] == folder['Id']:
                     log.info('duplicate contact')
@@ -55,7 +55,7 @@ class Folders( object ):
                     break
 
             if not duplicate:
-                self.contacts.append(Folder(folder,self.auth))
+                self.folders.append(Folder(folder,self.auth))
 
             log.debug('Appended folder.')
 
