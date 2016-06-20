@@ -59,7 +59,7 @@ class Message( object ):
             self.hasAttachments = json['HasAttachments']
 
         else:
-            self.json = {'Message':{'Body':{}},'ToRecipients':[]}
+            self.json = {'Message':{'Body':{}},'ToRecipients':[],'BccRecipients':[],'CcRecipients':[]}
             self.hasAttachments = False
 
         self.auth = auth
@@ -223,6 +223,59 @@ class Message( object ):
             if name is None:
                 name = address[:address.index('@')]
             self.json['ToRecipients'].append({'EmailAddress':{'Address':address,'Name':name}})
+
+
+    def addCcRecipients(self,address,name=None):
+        '''
+        Adds a CcRecipients to the CcRecipients list.
+
+        Arguments:
+        address -- the email address of the person you are sending to. <<< Important that.
+            Address can also be of type Contact or type Group.
+        name -- the name of the person you are sending to. mostly just a decorator. If you
+            send an email address for the address arg, this will give you the ability
+            to set the name properly, other wise it uses the email address up to the
+            at sign for the name. But if you send a type Contact or type Group, this
+            argument is completely ignored.
+        '''
+        if not 'CcRecipients' in self.json:
+            self.json['CcRecipients'] = []
+
+        if isinstance(address,Contact):
+            self.json['CcRecipients'].append(address.getFirstEmailAddress())
+        elif isinstance(address,Group):
+            for con in address.contacts:
+                self.json['CcRecipients'].append(address.getFirstEmailAddress())
+        else:
+            if name is None:
+                name = address[:address.index('@')]
+            self.json['CcRecipients'].append({'EmailAddress':{'Address':address,'Name':name}})
+
+    def addBccRecipients(self, address, name=None):
+        '''
+        Adds a CcRecipients to the CcRecipients list.
+
+        Arguments:
+        address -- the email address of the person you are sending to. <<< Important that.
+            Address can also be of type Contact or type Group.
+        name -- the name of the person you are sending to. mostly just a decorator. If you
+            send an email address for the address arg, this will give you the ability
+            to set the name properly, other wise it uses the email address up to the
+            at sign for the name. But if you send a type Contact or type Group, this
+            argument is completely ignored.
+        '''
+        if not 'BccRecipients' in self.json:
+            self.json['BccRecipients'] = []
+
+        if isinstance(address, Contact):
+            self.json['BccRecipients'].append(address.getFirstEmailAddress())
+        elif isinstance(address, Group):
+            for con in address.contacts:
+                self.json['BccRecipients'].append(address.getFirstEmailAddress())
+        else:
+            if name is None:
+                name = address[:address.index('@')]
+            self.json['BccRecipients'].append({'EmailAddress': {'Address': address, 'Name': name}})
 
     def setSubject(self,val):
         '''Sets the subect line of the email.'''
