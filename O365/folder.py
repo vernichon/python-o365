@@ -25,6 +25,7 @@ class Folder( object ):
             log.debug('translating contact information into local variables.')
             self.folderId = json['Id']
             self.name = json['DisplayName']
+            self.TotalItemCount = json['TotalItemCount']
         else:
             log.debug('there was no json, putting in some dumby info.')
             self.json = {'DisplayName':'Jebediah Kerman'}

@@ -24,7 +24,7 @@ class Folders( object ):
 
     folders_url = 'https://outlook.office365.com/api/v1.0/me/folders'
 
-    def __init__(self, auth, folderName=None):
+    def __init__(self, auth, getNow=False):
         '''
         Creates a group class for managing all contacts associated with email+password.
 
@@ -32,9 +32,11 @@ class Folders( object ):
         it'self to only those which are in that folder.
         '''
         log.debug('setting up for the folder %s',auth[0])
+
         self.auth = auth
         self.folders = []
-
+        if getNow:
+            self.getFolders()
 
 
     def getFolders(self):

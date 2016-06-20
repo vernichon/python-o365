@@ -18,7 +18,9 @@ class Inbox( object ):
         inbox_url -- url used for fetching emails.
     '''
     #url for fetching emails. Takes a flag for whether they are read or not.
+    inbox_folder_url = 'https://outlook.office365.com/api/v1.0/me/Folders/%s/messages'
     inbox_url = 'https://outlook.office365.com/api/v1.0/me/messages'
+
 
     def __init__(self, auth, getNow=True):
         '''
@@ -47,7 +49,7 @@ class Inbox( object ):
         return Message(response.json(),self.auth)
 
 
-    def getMessages(self):
+    def getMessages(self,folder_id = None):
         '''
         Downloads messages to local memory.
 
@@ -61,7 +63,11 @@ class Inbox( object ):
         '''
 
         log.debug('fetching messages.')
-        response = requests.get(self.inbox_url,auth=self.auth,params={'$filter':self.filters})
+        if not folder_id:
+            response = requests.get(self.inbox_url,auth=self.auth,params={'$filter':self.filters})
+        else:
+            print self.inbox_folder_url % folder_id
+            response = requests.get(self.inbox_folder_url % folder_id, auth=self.auth, params={'$filter': self.filters})
         log.info('Response from O365: %s', str(response))
 
         for message in response.json()['value']:
