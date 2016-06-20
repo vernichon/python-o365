@@ -97,6 +97,8 @@ class Message( object ):
             data['Message']['Body']['Content'] = self.json['Body']['Content']
             data['Message']['Body']['ContentType'] = self.json['Body']['ContentType']
             data['Message']['ToRecipients'] = self.json['ToRecipients']
+            data['Message']['CcRecipients'] = self.json['CcRecipients']
+            data['Message']['BccRecipients'] = self.json['BccRecipients']
             data['Message']['Attachments'] = [att.json for att in self.attachments]
             data['SaveToSentItems'] = "false"
             data = json.dumps(data)
