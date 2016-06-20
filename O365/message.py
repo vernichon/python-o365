@@ -227,7 +227,7 @@ class Message( object ):
             self.json['ToRecipients'].append({'EmailAddress':{'Address':address,'Name':name}})
 
 
-    def addCcRecipients(self,address,name=None):
+    def addCcRecipient(self,address,name=None):
         '''
         Adds a CcRecipients to the CcRecipients list.
 
@@ -253,7 +253,7 @@ class Message( object ):
                 name = address[:address.index('@')]
             self.json['CcRecipients'].append({'EmailAddress':{'Address':address,'Name':name}})
 
-    def addBccRecipients(self, address, name=None):
+    def addBccRecipient(self, address, name=None):
         '''
         Adds a CcRecipients to the CcRecipients list.
 
