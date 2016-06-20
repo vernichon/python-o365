@@ -28,5 +28,7 @@ from .message import Message
 from .task import Task
 from .tasks import Tasks
 from .schedule import Schedule
+from .folder import Folder
+from .folders import Folders
 
 #To the King!
