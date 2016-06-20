@@ -38,6 +38,15 @@ class Inbox( object ):
             self.getMessages()
 
 
+
+    def getMail(self, mail_id):
+        log.debug('fetching mail %s .' % mail_id)
+        response = requests.get("%s('%s')" % (self.inbox_url, mail_id), auth=self.auth)
+        log.info('Response from O365: %s', str(response))
+
+        return Message(response.json(),self.auth)
+
+
     def getMessages(self):
         '''
         Downloads messages to local memory.
