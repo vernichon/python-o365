@@ -36,6 +36,7 @@ class Contact( object ):
             log.debug('translating contact information into local variables.')
             self.contactId = json['Id']
             self.name = json['DisplayName']
+            self.adresses = self.json['EmailAddresses']
         else:
             log.debug('there was no json, putting in some dumby info.')
             self.json = {'DisplayName':'Jebediah Kerman'}
