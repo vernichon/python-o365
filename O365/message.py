@@ -211,6 +211,8 @@ class Message( object ):
             at sign for the name. But if you send a type Contact or type Group, this
             argument is completely ignored.
         '''
+        if not 'ToRecipients' in self.json:
+            self.json['ToRecipients'] = []
         if isinstance(address,Contact):
             self.json['ToRecipients'].append(address.getFirstEmailAddress())
         elif isinstance(address,Group):
