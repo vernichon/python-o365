@@ -59,7 +59,7 @@ class Message( object ):
             self.hasAttachments = json['HasAttachments']
 
         else:
-            self.json = {'Message':{'Body':{}},'ToRecipients':{}}
+            self.json = {'Message':{'Body':{}},'ToRecipients':[]}
             self.hasAttachments = False
 
         self.auth = auth
@@ -213,6 +213,7 @@ class Message( object ):
         '''
         if not 'ToRecipients' in self.json:
             self.json['ToRecipients'] = []
+
         if isinstance(address,Contact):
             self.json['ToRecipients'].append(address.getFirstEmailAddress())
         elif isinstance(address,Group):
