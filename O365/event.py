@@ -220,7 +220,7 @@ class Event( object ):
 
     def setBody(self,val):
         '''sets event body content.'''
-        self.json['Body']['Content'] = val
+        self.json['Body'] = {'Content': val}
 
     def setStart(self,val):
         '''

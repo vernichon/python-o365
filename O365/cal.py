@@ -106,7 +106,7 @@ class Calendar( object ):
 
                 log.debug('appended event: %s',event['Subject'])
             except Exception as e:
-                log.info('failed to append calendar: %',str(e))
+                log.info('failed to append calffdsendar: %',str(e))
 
         log.debug('all events retrieved and put in to the list.')
         return True

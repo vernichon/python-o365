@@ -36,7 +36,8 @@ class Schedule( object ):
         for calendar in response.json()['value']:
             try:
                 duplicate = False
-                log.debug('Got a calendar with Name: {0} and Id: {1}'.format(calendar['Name'],calendar['Id']))
+                log.debug('Got a calendar with Name: {0} and Id: {1}'.format(calendar['Name'].encode('utf-8'),calendar['Id']))
+
                 for i,c in enumerate(self.calendars):
                     if c.json['Id'] == calendar['Id']:
                         c.json = calendar

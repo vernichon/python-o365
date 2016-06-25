@@ -108,7 +108,7 @@ class Message( object ):
             return False
 
         response = requests.post(self.send_url,data,headers=headers,auth=self.auth)
-        log.debug('response from server for sending message:'+str(response))
+        log.warn('response from server for sending message:'+str(response))
 
         if response.status_code != 202:
             return False
