@@ -222,6 +222,10 @@ class Event( object ):
         '''sets event body content.'''
         self.json['Body'] = {'Content': val}
 
+    def setBodyHtml(self,val):
+        '''sets event body content.'''
+        self.json['Body'] = { 'ContentType': 'HTML','Content': val}
+
     def setStart(self,val):
         '''
         sets event start time.
