@@ -15,7 +15,7 @@ class Task(object):
     #takes a calendar ID
     create_url = 'https://outlook.office365.com/api/beta/me/tasks'
     #takes current event ID
-    update_url = 'https://outlook.office365.com/api/v1.0/me/events/{0}'
+    update_url = "https://outlook.office365.com/api/beta/me/tasks('%s')"
     #takes current event ID
     delete_url = 'https://outlook.office365.com/api/v1.0/me/events/{0}'
 
@@ -77,18 +77,6 @@ class Task(object):
 
 
     def create(self):
-        '''
-        this method creates an event on the calender passed.
-
-        IMPORTANT: It returns that event now created in the calendar, if you wish
-        to make any changes to this event after you make it, use the returned value
-        and not this particular event any further.
-
-        calendar -- a calendar class onto which you want this event to be created. If this is left
-        empty then the event's default calendar, specified at instancing, will be used. If no
-        default is specified, then the event cannot be created.
-
-        '''
         if not self.auth:
             log.debug('failed authentication check when creating event.')
             return False
@@ -109,6 +97,36 @@ class Task(object):
                 log.debug('response to event creation: %s', str(response))
             else:
                 log.error('No response, something is very wrong with create: %s', str(e))
+            return False
+
+        log.debug('response to event creation: %s', str(response))
+        return Task(response.json(), self.auth)
+
+
+    def update(self, task_id):
+        if not self.auth:
+            log.debug('failed authentication check when creating event.')
+            return False
+
+
+        headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
+
+        log.debug('creating json for request.')
+        data = json.dumps(self.json)
+
+        response = None
+        try:
+            log.info('sending post request now')
+            log.info(self.update_url % (task_id))
+            log.info(data)
+            response = requests.patch(self.update_url % (task_id) , data, headers=headers, auth=self.auth)
+            log.info('response to Task creation: %s', str(response))
+            log.info('sent post request.')
+        except Exception as e:
+            if response:
+                log.info('response to event creation: %s', str(response))
+            else:
+                log.info('No response, something is very wrong with create: %s', str(e))
             return False
 
         log.debug('response to event creation: %s', str(response))
