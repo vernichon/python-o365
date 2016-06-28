@@ -17,8 +17,7 @@ class Task(object):
     #takes current event ID
     update_url = "https://outlook.office365.com/api/beta/me/tasks('%s')"
     #takes current event ID
-    delete_url = 'https://outlook.office365.com/api/v1.0/me/events/{0}'
-
+    delete_url = "https://outlook.office365.com/api/beta/me/tasks('%s')"
 
     def __init__(self, json=None, auth=None):
         if json:
@@ -75,6 +74,32 @@ class Task(object):
 
         return Task(response.json(),self.auth)
 
+    def delete(self):
+        '''
+        Delete's an event from the calendar it is in.
+
+        But leaves you this handle. You could then change the calendar and transfer the event to
+        that new calendar. You know, if that's your thing.
+        '''
+        if not self.auth:
+            return False
+
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+
+        response = None
+        try:
+            log.warning('sending delete request')
+            response = requests.delete(self.delete_url % (self.json['Id']),headers=headers,auth=self.auth)
+            print "delte ", response
+
+        except Exception as e:
+            if response:
+                log.warning('response to deletion: %s',str(response))
+            else:
+                log.error('No response, something is very wrong with delete: %s',str(e))
+            return False
+
+        return response
 
     def create(self):
         if not self.auth:
