@@ -222,6 +222,12 @@ class Event( object ):
         '''sets event body content.'''
         self.json['Body'] = {'Content': val}
 
+    def setTZ(self,val="RST"):
+        '''sets event TimeZone.'''
+        self.json['StartTimeZone'] = val
+        self.json['EndTimeZone'] = val
+        print "self.json", self.json
+
     def setBodyHtml(self,val):
         '''sets event body content.'''
         self.json['Body'] = { 'ContentType': 'HTML','Content': val}
