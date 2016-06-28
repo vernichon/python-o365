@@ -66,7 +66,6 @@ class Inbox( object ):
         if not folder_id:
             response = requests.get(self.inbox_url,auth=self.auth,params={'$filter':self.filters})
         else:
-            print self.inbox_folder_url % folder_id
             response = requests.get(self.inbox_folder_url % folder_id, auth=self.auth, params={'$filter': self.filters})
         log.info('Response from O365: %s', str(response))
 

@@ -44,14 +44,14 @@ class Schedule( object ):
                         c.name = calendar['Name']
                         c.calendarId = calendar['Id']
                         duplicate = True
-                        log.debug('Calendar: {0} is a duplicate',calendar['Name'])
+                        log.debug('Calendar: {0} is a duplicate',calendar['Name'].encode('utf-8'))
                         break
 
                 if not duplicate:
                     self.calendars.append(Calendar(calendar,self.auth))
                     log.debug('appended calendar: %s',calendar['Name'])
 
-                log.debug('Finished with calendar {0} moving on.'.format(calendar['Name']))
+                log.debug('Finished with calendar {0} moving on.'.format(calendar['Name'].encode('utf-8')))
 
             except Exception as e:
                 log.info('failed to append calendar: {0}'.format(str(e)))
