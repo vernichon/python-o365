@@ -65,7 +65,7 @@ class Task(object):
             # this last one assumes you know how to format the time string. if it brakes, check
             # your time string!
             self.json['DueDateTime'] = {"DateTime":val, "TimeZone":TZ}
-        print "self.json['DueDateTime']  ",self.json['DueDateTime']
+
 
     def getTask(self, task_id):
         log.debug('fetching task %s .' % task_id)
