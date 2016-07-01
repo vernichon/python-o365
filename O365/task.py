@@ -33,8 +33,16 @@ class Task(object):
         return self.json['CreatedDateTime']
 
     def getDueDate(self):
-        return self.json['DueDateTime']['DateTime']
+        res = None
+        if self.json['DueDateTime'] and self.json['DueDateTime']['DateTime']:
+            res = self.json['DueDateTime']['DateTime']
+        return res
 
+    def getReminderDateTime(self):
+        res = None
+        if self.json['ReminderDateTime'] and self.json['ReminderDateTime']['DateTime']:
+            res = self.json['ReminderDateTime']['DateTime']
+        return res
 
     def getId(self):
         return self.json['Id']
