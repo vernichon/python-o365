@@ -25,7 +25,7 @@ class Calendar( object ):
         events_url - the url that is actually called to fetch events. takes an ID, start, and end.
         time_string - used for converting between struct_time and json's time format.
     '''
-    events_url = 'https://outlook.office365.com/api/v1.0/me/calendars/{0}/calendarview?startDateTime={1}&endDateTime={2}&$top=1000'
+    events_url ="https://outlook.office365.com/api/beta/me/calendars/%s/calendarview?startDateTime=%s&endDateTime=%s&$top=1000&$expand=SingleValueExtendedProperties($filter=PropertyId eq 'String {66f5a359-4659-4830-9070-00040ec6ac8e} Name aaa')"
 
     time_string = '%Y-%m-%dT%H:%M:%SZ'
 
@@ -85,9 +85,10 @@ class Calendar( object ):
             end += 3600*24*365
             end = time.gmtime(end)
             end = time.strftime(self.time_string,end)
-
+        headers = {'Prefer': 'outlook.timezone="Europe/Paris"'}
         #This is where the actual call to Office365 happens.
-        response = requests.get(self.events_url.format(self.json['Id'],start,end),auth=self.auth)
+        response = requests.get(self.events_url % (self.json['Id'],start,end),headers=headers,auth=self.auth)
+        print self.events_url % (self.json['Id'],start,end)
         log.info('Response from O365: %s', str(response))
 
         #This takes that response and then parses it into individual calendar events.

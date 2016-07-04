@@ -3,6 +3,7 @@ import json
 import requests
 import time
 
+
 logging.basicConfig(filename='o365.log',level=logging.DEBUG)
 
 log = logging.getLogger(__name__)
@@ -36,14 +37,15 @@ class Event( object ):
         delete_url -- url for deleting an event.
     '''
     #Formated time string for translation to and from json.
-    time_string = '%Y-%m-%dT%H:%M:%SZ'
+    time_string = '%Y-%m-%dT%H:%M:%S'
+    time_string_get = '%Y-%m-%dT%H:%M:%S.%f0'
     #takes a calendar ID
-    create_url = 'https://outlook.office365.com/api/v1.0/me/calendars/{0}/events'
+    create_url = 'https://outlook.office365.com/api/beta/me/calendars/{0}/events'
     #takes current event ID
-    update_url = 'https://outlook.office365.com/api/v1.0/me/events/{0}'
+    update_url = 'https://outlook.office365.com/api/beta/me/events/{0}'
     #takes current event ID
-    delete_url = 'https://outlook.office365.com/api/v1.0/me/events/{0}'
-
+    delete_url = 'https://outlook.office365.com/api/beta/me/events/{0}'
+    TimeZone = "Europe/Paris"
 
     def __init__(self,json=None,auth=None,cal=None):
         '''
@@ -81,18 +83,18 @@ class Event( object ):
 
         '''
         if not self.auth:
-            log.debug('failed authentication check when creating event.')
+            log.info('failed authentication check when creating event.')
             return False
 
         if calendar:
             calId = calendar.calendarId
             self.calendar = calendar
-            log.debug('sent to passed calendar.')
+            log.info('sent to passed calendar.')
         elif self.calendar:
             calId = self.calendar.calendarId
-            log.debug('sent to default calendar.')
+            log.info('sent to default calendar.')
         else:
-            log.debug('no valid calendar to upload to.')
+            log.info('no valid calendar to upload to.')
             return False
 
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
@@ -102,17 +104,18 @@ class Event( object ):
 
         response = None
         try:
-            log.debug('sending post request now')
+            log.info('sending post request now')
+            print data
             response = requests.post(self.create_url.format(calId),data,headers=headers,auth=self.auth)
-            log.debug('sent post request.')
+            log.info('sent post request.')
         except Exception as e:
             if response:
-                log.debug('response to event creation: %s',str(response))
+                log.info('response to event creation: %s',str(response.content))
             else:
-                log.error('No response, something is very wrong with create: %s',str(e))
+                log.info('No response, something is very wrong with create: %s',str(e))
             return False
 
-        log.debug('response to event creation: %s',str(response))
+        log.info('response to event creation: %s',str(response))
         return Event(response.json(),self.auth,calendar)
 
     def update(self):
@@ -204,11 +207,11 @@ class Event( object ):
 
     def getStart(self):
         '''Gets event start struct_time'''
-        return time.strptime(self.json['Start'], self.time_string)
+        return time.strptime(self.json['Start']['DateTime'], self.time_string_get)
 
     def getEnd(self):
         '''Gets event end struct_time'''
-        return time.strptime(self.json['End'], self.time_string)
+        return time.strptime(self.json['End']['DateTime'], self.time_string_get)
 
     def getAttendees(self):
         '''Gets list of event attendees.'''
@@ -224,8 +227,8 @@ class Event( object ):
 
     def setTZ(self,val="RST"):
         '''sets event TimeZone.'''
-        self.json['StartTimeZone'] = val
-        self.json['EndTimeZone'] = val
+        self.TimeZone = val
+
 
 
     def setBodyHtml(self,val):
@@ -245,6 +248,7 @@ class Event( object ):
         '''
         if isinstance(val,time.struct_time):
             self.json['Start'] = time.strftime(self.time_string,val)
+
         elif isinstance(val,int):
             self.json['Start'] = time.strftime(self.time_string,time.gmtime(val))
         elif isinstance(val,float):
@@ -253,8 +257,12 @@ class Event( object ):
             #this last one assumes you know how to format the time string. if it brakes, check
             #your time string!
             self.json['Start'] = val
+        self.json['Start'] = {
+                                 "DateTime": self.json['Start'],
+                                 "TimeZone": self.TimeZone
+                             }
 
-    def setEnd(self,val):
+    def setEnd(self,val ):
         '''
         sets event end time.
 
@@ -265,6 +273,7 @@ class Event( object ):
             in the json style, which is %Y-%m-%dT%H:%M:%SZ. If you stray from that in your string
             you will break the library.
         '''
+
         if isinstance(val,time.struct_time):
             self.json['End'] = time.strftime(self.time_string,val)
         elif isinstance(val,int):
@@ -275,7 +284,10 @@ class Event( object ):
             #this last one assumes you know how to format the time string. if it brakes, check
             #your time string!
             self.json['End'] = val
-
+        self.json['End'] = {
+                                 "DateTime": self.json['End'],
+                                 "TimeZone": self.TimeZone
+                             }
     def setAttendee(self,val):
         '''
         set the attendee list.
