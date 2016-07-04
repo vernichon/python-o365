@@ -25,7 +25,7 @@ class Calendar( object ):
         events_url - the url that is actually called to fetch events. takes an ID, start, and end.
         time_string - used for converting between struct_time and json's time format.
     '''
-    events_url ="https://outlook.office365.com/api/beta/me/calendars/%s/calendarview?startDateTime=%s&endDateTime=%s&$top=1000&$expand=SingleValueExtendedProperties($filter=PropertyId eq 'String {66f5a359-4659-4830-9070-00040ec6ac8e} Name aaa')"
+    events_url ="https://outlook.office365.com/api/beta/me/calendars/%s/calendarview?startDateTime=%s&endDateTime=%s&$top=1000%s"
 
     time_string = '%Y-%m-%dT%H:%M:%SZ'
 
@@ -63,7 +63,7 @@ class Calendar( object ):
         return self.getEvents(start,end)
 
 
-    def getEvents(self,start=None,end=None):
+    def getEvents(self,start=None,end=None,extended_url= ""):
         '''
         Pulls events in for this calendar. default range is today to a year now.
 
@@ -71,8 +71,16 @@ class Calendar( object ):
         start -- The starting date from where you want to begin requesting events. The expected
         type is a struct_time. Default is today.
         end -- The ending date to where you want to end requesting events. The expected
+
         type is a struct_time. Default is a year from start.
+
+        extended_url is used for add parameter in url for getting extended properties
+        example : &$expand=SingleValueExtendedProperties($filter=PropertyId eq 'String {66f5a359-4659-4830-9070-00040ec6ac8e} Name MyBeautifulPropertie')
+
+        see: https://msdn.microsoft.com/en-us/office/office365/api/extended-properties-rest-operations
         '''
+
+
 
         #If no start time has been supplied, it is assumed you want to start as of now.
         if not start:
@@ -87,8 +95,7 @@ class Calendar( object ):
             end = time.strftime(self.time_string,end)
         headers = {'Prefer': 'outlook.timezone="Europe/Paris"'}
         #This is where the actual call to Office365 happens.
-        response = requests.get(self.events_url % (self.json['Id'],start,end),headers=headers,auth=self.auth)
-        print self.events_url % (self.json['Id'],start,end)
+        response = requests.get(self.events_url % (self.json['Id'],start,end,extended_url),headers=headers,auth=self.auth)
         log.info('Response from O365: %s', str(response))
 
         #This takes that response and then parses it into individual calendar events.
